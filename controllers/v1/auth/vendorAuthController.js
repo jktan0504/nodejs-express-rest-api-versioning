@@ -63,19 +63,22 @@ exports.register  = async (req, res, next) => {
 
 		if (user != null) {
 			// Profile Photo
-			if (req.files.profile_image) {
-				let file = req.files.profile_image;
-				let savedDirectory = `./storage/media/user/user-${user._id}/profile/`;
-					
-				// checkDir
-				await fileSystem.createDirectory(savedDirectory);
-				let savedPath = `${savedDirectory}${file.name}`;
-				// Use the mv() method to place the file in upload directory (i.e. "uploads")
-				await file.mv(savedPath);
-					
-				user.profile_image = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
-				await user.save();
-			}
+			if (req.files != null && req.files != undefined) {
+				if (Object.keys(req.files).includes("profile_image")) {
+					let file = req.files.profile_image;
+					let savedDirectory = `./storage/media/user/user-${user._id}/profile/`;
+						
+					// checkDir
+					await fileSystem.createDirectory(savedDirectory);
+					let savedPath = `${savedDirectory}${file.name}`;
+					// Use the mv() method to place the file in upload directory (i.e. "uploads")
+					await file.mv(savedPath);
+						
+					user.profile_image = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
+					await user.save();
+				}
+			}		
+			
 				
 			const token = jwt.sign(
 				{
@@ -92,7 +95,6 @@ exports.register  = async (req, res, next) => {
 				registration_id: registration_id,
 				company_contact: company_contact,
 				company_contact_country: company_contact_country,
-				company_contact_country: company_contact_country,
 				vendor_category: vendor_category
 			});
 
@@ -106,58 +108,66 @@ exports.register  = async (req, res, next) => {
 						
 			// Media File
 			if (result != null) {
-				// Company Logo                
-				if (req.files.company_logo) {
-					let file = req.files.company_logo;
-					let savedDirectory = `./storage/media/vendor/vendor-${result._id}/companylogo/`;	
-					
-					// checkDir
-					await fileSystem.createDirectory(savedDirectory);
-					let savedPath = `${savedDirectory}${file.name}`;
-					// Use the mv() method to place the file in upload directory (i.e. "uploads")
-					await file.mv(savedPath);
-							
-					result.company_logo = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
-					await result.save();
+
+				// Company Logo 
+				if (req.files != null && req.files != undefined) {
+					if (Object.keys(req.files).includes("company_logo")) {
+						let file = req.files.company_logo;
+						let savedDirectory = `./storage/media/vendor/vendor-${result._id}/companylogo/`;	
+						
+						// checkDir
+						await fileSystem.createDirectory(savedDirectory);
+						let savedPath = `${savedDirectory}${file.name}`;
+						// Use the mv() method to place the file in upload directory (i.e. "uploads")
+						await file.mv(savedPath);
+								
+						result.company_logo = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
+						await result.save();
+					}
 				}
 
-				// Company Banner                
-				if (req.files.company_banner) {
-					let file = req.files.company_banner;
-					let savedDirectory = `./storage/media/vendor/vendor-${result._id}/companybanner/`;
-									
-					// checkDir
-					await fileSystem.createDirectory(savedDirectory);
-					let savedPath = `${savedDirectory}${file.name}`;
-					// Use the mv() method to place the file in upload directory (i.e. "uploads")
-					await file.mv(savedPath);
-									
-					result.company_banner = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
-					await result.save();
+				// Company Banner 
+				if (req.files != null && req.files != undefined) {
+					if (Object.keys(req.files).includes("company_banner")) {
+						let file = req.files.company_banner;
+						let savedDirectory = `./storage/media/vendor/vendor-${result._id}/companybanner/`;
+										
+						// checkDir
+						await fileSystem.createDirectory(savedDirectory);
+						let savedPath = `${savedDirectory}${file.name}`;
+						// Use the mv() method to place the file in upload directory (i.e. "uploads")
+						await file.mv(savedPath);
+										
+						result.company_banner = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
+						await result.save();
+					}
 				}
-					// Company Banner                
-				if (req.files.company_ssm) {
-					let file = req.files.company_ssm;
-					let savedDirectory = `./storage/media/vendor/vendor-${result._id}/companyssm/`;
-							
-					// checkDir
-					await fileSystem.createDirectory(savedDirectory);
-					let savedPath = `${savedDirectory}${file.name}`;
-					// Use the mv() method to place the file in upload directory (i.e. "uploads")
-					await file.mv(savedPath);
+
+				// Company Banner 
+				if (req.files != null && req.files != undefined) {
+					if (Object.keys(req.files).includes("company_ssm")) {
+						let file = req.files.company_ssm;
+						let savedDirectory = `./storage/media/vendor/vendor-${result._id}/companyssm/`;
 								
-					result.company_ssm = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
-					await result.save();
+						// checkDir
+						await fileSystem.createDirectory(savedDirectory);
+						let savedPath = `${savedDirectory}${file.name}`;
+						// Use the mv() method to place the file in upload directory (i.e. "uploads")
+						await file.mv(savedPath);
+									
+						result.company_ssm = `${CONSTANTS.API_DOMAIN}${savedPath.substr(1)}`;
+						await result.save();
+					}
 				}
-							
+		
 				//send response
 				res.send({
 					status: true,
 					token: token,
-					message: 'File is uploaded',
+					message: 'Vendor Sign Up Successfully',
 					data: vendorData
 				});
-				}
+			}
 			else {
 				//send response
 				res.send({
